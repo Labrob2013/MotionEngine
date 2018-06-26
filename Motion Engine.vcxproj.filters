@@ -27,6 +27,9 @@
     <ClCompile Include="ME_Shaders.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="ME_pCube.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ME_Console.h">
@@ -39,6 +42,9 @@
       <Filter>Файлы исходного кода</Filter>
     </ClInclude>
     <ClInclude Include="ME_Shaders.h">
+      <Filter>Файлы исходного кода</Filter>
+    </ClInclude>
+    <ClInclude Include="ME_pCube.h">
       <Filter>Файлы исходного кода</Filter>
     </ClInclude>
   </ItemGroup>

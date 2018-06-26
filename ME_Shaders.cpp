@@ -27,7 +27,6 @@ m_vertexSource(vertexSource), m_fragmentSource(fragmentSource)
 
 ME::Shaders::~Shaders()
 {
-
 	//- Деструктор шейдера
 	glDeleteShader(m_vertexID);
 	glDeleteShader(m_fragmentID);
@@ -50,7 +49,6 @@ ME::Shaders& ME::Shaders::operator=(Shaders const &shaderACopier)
 
 bool ME::Shaders::charger()
 {
-
 	//- Уничтожение старого шейдера
 	if (glIsShader(m_vertexID) == GL_TRUE)
 		glDeleteShader(m_vertexID);
@@ -127,7 +125,7 @@ bool ME::Shaders::compilerShader(GLuint &shader, GLenum type, std::string const 
 	//- Шейдерная проверка
 	if (shader == 0)
 	{
-		ME::Console::Log(Console::Error, "An error of the shader type that does not exist");
+		PRINT_LOG("[Error] An error of the shader type that does not exist");
 		return false;
 	}
 
@@ -138,7 +136,7 @@ bool ME::Shaders::compilerShader(GLuint &shader, GLenum type, std::string const 
 	//- Открытие файла
 	if (!fichier)
 	{
-		ME::Console::Log(Console::Error, "Error File: " + fichierSource + " could not be found");
+		PRINT_LOG("[Error] Error File: " + fichierSource + " could not be found");
 		glDeleteShader(shader);
 
 		return false;

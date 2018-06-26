@@ -1,45 +1,31 @@
 #include "ME_Console.h"
 
 //- Создаем Ofstream
-ofstream ME::Console::FileSave = ofstream();
+stringstream ME::Console::Log = stringstream();
 
-// ---------------------------------------- //
-// --------- Функция: Вывод логов  -------- //
-// ---------------------------------------- //
 
-void ME::Console::Log(const Type &Type, const string &Message)
+// ------------------------------------------------- //
+// --------- Функция: Создание лога в файл  -------- //
+// ------------------------------------------------- //
+
+void ME::Console::SaveInFile(const string &filename)
 {
-	switch (Type)
-	{
-	case Type::None:
-		FileSave << Message << endl;
-		cout << Message << endl;
-		break;
+	ofstream File(filename);
 
-	case Type::Info:
-		FileSave << "[Info] " << Message << endl;
-		cout << "[Info] " << Message << endl;
-		break;
+	if (!File.is_open())
+		return;
 
-	case Type::Warning:
-		FileSave << "[Warning] " << Message << endl;
-		cout << "[Warning] " << Message << endl;
-		break;
-
-	case Type::Error:
-		FileSave << "[Error] " << Message << endl;
-		cout << "[Error] " << Message << endl;
-		break;
-	}
+	File << Log.str();
+	File.close();
 }
 
-// ------------------------------------------- //
-// --------- Функция: Указание файла  -------- //
-// ------------------------------------------- //
+// ------------------------------------------ //
+// --------- Функция: Очишения лога  -------- //
+// ------------------------------------------ //
 
-void ME::Console::SetFilename(const string &filename)
+void ME::Console::Clear()
 {
-	FileSave.open(filename);
+	Log.clear();
 }
 
-// ------------------------------------------- //
+// ------------------------------------------ //

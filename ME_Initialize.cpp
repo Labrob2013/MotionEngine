@@ -1,7 +1,6 @@
 #include "ME_Initialize.h"
-#include "ME_Shaders.h"
 #include "ME_Console.h"
-
+#include "ME_pCube.h"
 
 // ---------------------------------------- //
 // --------- Инициализация движка  -------- //
@@ -11,25 +10,21 @@
 	SDL_Window* window(0);
 	SDL_GLContext contexteOpenGL(0);
 
-	//- Импорт шейдеров
-	ME::Shaders shaderBasique("shaders/basique2D.vme", "shaders/basique2D.fme");
-
+	//- Матрица
+	mat4 projection, modelview;
 
 void ME::Initialize::InitEngine() {
-
-	//- Задаем папку и файл логов
-	ME::Console::SetFilename("Console.log");
 
 	//- Включаем чтобы потом выключать если ошибки
 	Loaded_SDL = true;
 	Loaded_Window = true;
 	Loaded_GLEW = true;
 
-	ME::Console::Log(Console::None, "- - - - - - - - - - - - - - -");
-	ME::Console::Log(Console::None, "- - - - Motion Engine - - - -");
-	ME::Console::Log(Console::None, "- - - - - - - - - - - - - - -");
-	ME::Console::Log(Console::None, "");
-	ME::Console::Log(Console::Info, "Initialization Motion Engine");
+	PRINT_LOG("- - - - - - - - - - - - - - -");
+	PRINT_LOG("- - - - Motion Engine - - - -");
+	PRINT_LOG("- - - - - - - - - - - - - - -");
+	PRINT_LOG("");
+	PRINT_LOG("[Info] Initialization Motion Engine");
 
 	//- Инициализация SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -38,10 +33,11 @@ void ME::Initialize::InitEngine() {
 		SDL_Quit();
 
 		Loaded_SDL = false;
+		SaveLog();
 		exit(-1);
 	}
 	if (Loaded_SDL)
-		ME::Console::Log(Console::Info, "SDL was successfully launched");
+		PRINT_LOG("[Info] SDL was successfully launched");
 
 
 	//- Назначаем версию OpenGL
@@ -54,18 +50,19 @@ void ME::Initialize::InitEngine() {
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
 	//- Создание окна
-	window = SDL_CreateWindow("Тестирование двигателя Motion Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow("Тестирование двигателя Motion Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w_width, w_height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	if (window == 0)
 	{
-		ME::Console::Log(Console::Error, "Error creating window");
+		PRINT_LOG("[Error] Error creating window");
 		SDL_Quit();
 
 		Loaded_Window = false;
+		SaveLog();
 		exit(-1);
 	}
 	if (Loaded_Window)
-		ME::Console::Log(Console::Info, "Window successfully created");
+		PRINT_LOG("[Info] Window successfully created");
 
 	//- Создание контекста OpenGL
 	contexteOpenGL = SDL_GL_CreateContext(window);
@@ -74,10 +71,9 @@ void ME::Initialize::InitEngine() {
 	{
 		SDL_DestroyWindow(window);
 		SDL_Quit();
-
+		SaveLog();
 		exit(-1);
 	}
-
 
 	//- Инициализация GLEW
 	GLenum initialisationGLEW(glewInit());
@@ -85,21 +81,22 @@ void ME::Initialize::InitEngine() {
 	//- Если инициализация завершилась с ошибкой:
 	if (initialisationGLEW != GLEW_OK)
 	{
-		ME::Console::Log(Console::Error, "GLEW initialization error: ");
-
+		PRINT_LOG("[Error] GLEW initialization error:");
 		//- Закрываем
 		SDL_GL_DeleteContext(contexteOpenGL);
 		SDL_DestroyWindow(window);
 		SDL_Quit();
 
 		Loaded_GLEW = false;
+		SaveLog();
 		exit(-1);
 	}
 	if (Loaded_GLEW)
-		ME::Console::Log(Console::Info, "GLEW was successfully launched");
+		PRINT_LOG("[Info] GLEW was successfully launched");
+	
+	//- Включаем Depth Buffer
+	glEnable(GL_DEPTH_TEST);
 
-	//- Запуск шейдеров
-	shaderBasique.charger();
 
 	//- Основной цикл
 	while (!WinСlosed)
@@ -113,18 +110,17 @@ void ME::Initialize::InitEngine() {
 		//- Обновление Окна
 		ME::Initialize::UpdateWindow();
 
-		//- Обновление окна
 		SDL_GL_SwapWindow(window);
 	}
 	if (WinСlosed)
-		ME::Console::Log(Console::Info, "Successfully completed the Motion Engine");
-
+		PRINT_LOG("[Info] Successfully completed the Motion Engine");
 
 	//- Закрытие
 	SDL_GL_DeleteContext(contexteOpenGL);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 
+	SaveLog();
 	exit(0);
 }
 
@@ -132,29 +128,33 @@ void ME::Initialize::InitEngine() {
 // ---------- Обновление Окна ------- //
 // ---------------------------------- //
 
-void ME::Initialize::UpdateWindow(){
+void ME::Initialize::UpdateWindow()
+{
+	ME::pCube pCubeTest(2.0, "shaders/couleur3D.vme", "Shaders/couleur3D.fme");
 
-	//- Вершины и координаты
-	float vertices[] = { -0.5, -0.5, 0.0, 0.5, 0.5, -0.5 };
+	//- Матрицы проецирования и моделирования
+	mat4 projection;
+	mat4 modelview;
 
-	//- Очистка экрана
-	glClear(GL_COLOR_BUFFER_BIT);
+	projection = perspective(70.0, (double)w_width / w_height, 1.0, 100.0);
 
-	//- Активируем шейдеры
-	glUseProgram(shaderBasique.getProgramID());
+	//- Очишаем
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//- Заполните и затем активируйте таблицу Vertex Attrib 0
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, vertices);
-	glEnableVertexAttribArray(0);
+	modelview = mat4(1.0);
+	modelview = lookAt(vec3(3, 3, 3), vec3(0, 0, 0), vec3(0, 1, 0));
 
-
-	//- Мы показываем треугольник
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-
-
-	//- Отключите массив Vertex Attrib, потому что он вам больше не нужен
-	glDisableVertexAttribArray(0);
-
-	//- Отключаем шейдеры
-	glUseProgram(0);
+	// Affichage du cube
+	pCubeTest.Display(projection, modelview);
 }
+
+// ---------------------------------- //
+// ---------- Сохранение лога ------- //
+// ---------------------------------- //
+
+void ME::Initialize::SaveLog()
+{
+	ME::Console::SaveInFile("Console.log");
+}
+
+// ---------------------------------- //

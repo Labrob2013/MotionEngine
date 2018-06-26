@@ -74,12 +74,14 @@
     <ClCompile Include="ME_Console.cpp" />
     <ClCompile Include="ME_Initialize.cpp" />
     <ClCompile Include="ME_Main.cpp" />
+    <ClCompile Include="ME_pCube.cpp" />
     <ClCompile Include="ME_Shaders.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ME_Console.h" />
     <ClInclude Include="ME_Initialize.h" />
     <ClInclude Include="ME_Main.h" />
+    <ClInclude Include="ME_pCube.h" />
     <ClInclude Include="ME_Shaders.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

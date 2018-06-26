@@ -15,6 +15,13 @@ namespace ME
 		//- Обновление окна
 		void UpdateWindow();
 
+		//- Сохранение лога
+		void SaveLog();
+
+
+		//- SDL
+		int w_width, w_height;
+
 	private:
 		//- Для проверки загружены ли?
 		bool Loaded_SDL = false;

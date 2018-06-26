@@ -4,25 +4,21 @@
 
 #include "ME_Main.h"
 
+//- Команда для выполнения
+#define PRINT_LOG( X ) ME::Console::Log << X << endl; cout << X << endl;
+
 namespace ME
 {
 	class Console
 	{
 	public:
-		enum Type
-		{
-			None,
-			Info,
-			Warning,
-			Error
-		};
+		//- Сохранить лог в файл
+		static void SaveInFile(const string& filename);
 
-		static void Log(const Type& TypeLog, const string& Message);
+		//- Очистить лог
+		static void Clear();
 
-		static void SetFilename(const string& filename);
-
-	private:
-		static ofstream			FileSave;
+		static stringstream		Log;
 	};
 }
 

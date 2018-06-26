@@ -4,7 +4,6 @@
 
 #include "ME_Main.h"
 
-
 namespace ME
 {
 	class Shaders
@@ -24,13 +23,9 @@ namespace ME
 
 
 	private:
-		
-		GLuint m_vertexID;
-		GLuint m_fragmentID;
-		GLuint m_programID;
+		GLuint m_vertexID, m_fragmentID, m_programID;
 
-		std::string m_vertexSource;
-		std::string m_fragmentSource;
+		string m_vertexSource, m_fragmentSource;
 	};
 }
 

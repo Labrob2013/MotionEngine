@@ -22,6 +22,10 @@
 	#include <fstream>
 	#include <sstream>
 	#include <string>
+
+//- Использование пространств
 	using namespace std;
+	using namespace glm;
+
 
 // --------------------------------------------------------- //
