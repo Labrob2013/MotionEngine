@@ -30,6 +30,9 @@
     <ClCompile Include="ME_pCube.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="ME_Input.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ME_Console.h">
@@ -45,6 +48,9 @@
       <Filter>Файлы исходного кода</Filter>
     </ClInclude>
     <ClInclude Include="ME_pCube.h">
+      <Filter>Файлы исходного кода</Filter>
+    </ClInclude>
+    <ClInclude Include="ME_Input.h">
       <Filter>Файлы исходного кода</Filter>
     </ClInclude>
   </ItemGroup>

@@ -24,15 +24,18 @@ namespace ME
 
 	private:
 		//- Для проверки загружены ли?
-		bool Loaded_SDL = false;
-		bool Loaded_Window = false;
-		bool Loaded_GLEW = false;
+			bool Loaded_SDL = false;
+			bool Loaded_Window = false;
+			bool Loaded_GLEW = false;
 
 		//- SDL
-		SDL_Event evenements;
+			//- Основные
+			SDL_Event evenements;
+			SDL_Window* window;
+			SDL_GLContext contexteOpenGL;
 
-		//- Закрыто ли окно?
-		bool WinСlosed = false;
+			//- Отображение проекции и предметов
+			mat4 projection, modelview;
 	};
 }
 

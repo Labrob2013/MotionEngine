@@ -1,24 +1,16 @@
 #include "ME_Initialize.h"
 #include "ME_Console.h"
+#include "ME_Input.h"
 #include "ME_pCube.h"
 
-// ---------------------------------------- //
-// --------- Инициализация движка  -------- //
-// ---------------------------------------- //
-
-	//- Для создания окна
-	SDL_Window* window(0);
-	SDL_GLContext contexteOpenGL(0);
-
-	//- Матрица
-	mat4 projection, modelview;
+// -------------------------------------------- //
+// -------- // Инициализация движка // -------- //
+// -------------------------------------------- //
 
 void ME::Initialize::InitEngine() {
 
 	//- Включаем чтобы потом выключать если ошибки
-	Loaded_SDL = true;
-	Loaded_Window = true;
-	Loaded_GLEW = true;
+	Loaded_SDL = true, Loaded_Window = true, Loaded_GLEW = true;
 
 	PRINT_LOG("- - - - - - - - - - - - - - -");
 	PRINT_LOG("- - - - Motion Engine - - - -");
@@ -97,22 +89,26 @@ void ME::Initialize::InitEngine() {
 	//- Включаем Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
+	//- Создаем объект для работы с клавиатурой и мышью
+	ME::Input m_input;
+
+	PRINT_LOG("[Info] Successfully started input devices");
 
 	//- Основной цикл
-	while (!WinСlosed)
+	while (!m_input.end())
 	{
 		//- Управление событиями
-		SDL_WaitEvent(&evenements);
+		m_input.updateEvenements();
 
-		if (evenements.window.event == SDL_WINDOWEVENT_CLOSE)
-			WinСlosed = true;
+		if (m_input.getTouche(SDL_SCANCODE_ESCAPE))
+			break;
 
 		//- Обновление Окна
 		ME::Initialize::UpdateWindow();
 
 		SDL_GL_SwapWindow(window);
 	}
-	if (WinСlosed)
+	if (m_input.end())
 		PRINT_LOG("[Info] Successfully completed the Motion Engine");
 
 	//- Закрытие
@@ -124,9 +120,9 @@ void ME::Initialize::InitEngine() {
 	exit(0);
 }
 
-// ---------------------------------- //
-// ---------- Обновление Окна ------- //
-// ---------------------------------- //
+// --------------------------------------- //
+// -------- // Обновление Окна // -------- //
+// --------------------------------------- //
 
 void ME::Initialize::UpdateWindow()
 {
@@ -144,17 +140,38 @@ void ME::Initialize::UpdateWindow()
 	modelview = mat4(1.0);
 	modelview = lookAt(vec3(3, 3, 3), vec3(0, 0, 0), vec3(0, 1, 0));
 
-	// Affichage du cube
+	//- Сохраняем
+	mat4 save_Modelview = modelview;
+
+// -------------------------------------- //
+// -------- // Создаем объекты // ------- //
+// -------------------------------------- //
+
+	//- Показывая первый куб (в центре маркера)
 	pCubeTest.Display(projection, modelview);
+
+	//- Отображение второго куба
+	modelview = translate(modelview, vec3(3, 0, 0));
+	pCubeTest.Display(projection, modelview);
+
+
+	//- Отображение третьего куба
+	modelview = translate(modelview, vec3(3, 0, 0));
+	pCubeTest.Display(projection, modelview);
+
+//
+
+	//- Возвращаем вид
+	modelview = save_Modelview;
 }
 
-// ---------------------------------- //
-// ---------- Сохранение лога ------- //
-// ---------------------------------- //
+// -------------------------------------- //
+// -------- // Сохранение лога // ------- //
+// -------------------------------------- //
 
 void ME::Initialize::SaveLog()
 {
 	ME::Console::SaveInFile("Console.log");
 }
 
-// ---------------------------------- //
+// -------------------------------------- //
