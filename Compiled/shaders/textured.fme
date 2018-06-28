@@ -1,28 +1,20 @@
-// Version du GLSL
-
 #version 150 core
 
 
-// Entr�e
-
+//- Входные
 in vec2 coordTexture;
 
 
-// Uniform
-
+//- Uniform
 uniform sampler2D texture;
 
 
-// Sortie 
-
+//- Выход
 out vec4 out_Color;
 
 
-// Fonction main
-
 void main()
 {
-    // Couleur du pixel
-
+    //- Цвет пикселей
     out_Color = texture(texture, coordTexture);
 }

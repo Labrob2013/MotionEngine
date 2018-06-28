@@ -1,4 +1,5 @@
 #include "ME_Shaders.h"
+#include "ME_Initialize.h"
 #include "ME_Console.h"
 
 
@@ -187,11 +188,13 @@ bool ME::Shaders::compilerShader(GLuint &shader, GLenum type, std::string const 
 		glGetShaderInfoLog(shader, tailleErreur, &tailleErreur, erreur);
 		erreur[tailleErreur] = '\0';
 
-		std::cout << erreur << std::endl;
+		ME::Initialize Init;
+		PRINT_LOG(Init.GetTime() << erreur);
 
 		delete[] erreur;
 		glDeleteShader(shader);
 
+		Init.SaveLog();
 		return false;
 	}
 

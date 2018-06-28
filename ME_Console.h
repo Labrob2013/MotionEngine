@@ -2,10 +2,13 @@
 // ---------- // Здесь все связанное с логами // ---------- //
 // -------------------------------------------------------- //
 
+#ifndef ME_CONSOLE
+#define ME_CONSOLE
+
 #include "ME_Main.h"
 
 //- Команда для выполнения
-#define PRINT_LOG( X ) ME::Console::Log << X << endl; cout << X << endl;
+#define PRINT_LOG( X ) { ME::Console::Log << X << endl; cout << X << endl; }
 
 namespace ME
 {
@@ -21,5 +24,7 @@ namespace ME
 		static stringstream		Log;
 	};
 }
+
+#endif //- ME_CONSOLE
 
 // -------------------------------------------------------- //

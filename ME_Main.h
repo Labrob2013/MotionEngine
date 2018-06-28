@@ -9,6 +9,7 @@
 
 	//- SDL 
 	#include <SDL.h>
+	#include <SDL_image.h>
 
 	//- GLM
 	#include <glm.hpp>
@@ -22,6 +23,7 @@
 	#include <fstream>
 	#include <sstream>
 	#include <string>
+	#include <ctime>
 
 //- Использование пространств
 	using namespace std;

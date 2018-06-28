@@ -42,17 +42,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)\Compiled</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)\Compiled\</OutDir>
+    <TargetName>$(ProjectName)_release</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>Utilites/SDL2/include;Utilites/glew-2.1.0/include;Utilites/glm/glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Utilites/SDL2/include;Utilites/glew-2.1.0/include;Utilites/glm/glm;Utilites/SDL2_image-2.0.3/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>Utilites\SDL2\lib\x86\;Utilites\glew-2.1.0\lib\Release\Win32\;Utilites\glm\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2main.lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;glm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Utilites\SDL2\lib\x86\;Utilites\glew-2.1.0\lib\Release\Win32\;Utilites\glm\lib\;Utilites\SDL2_image-2.0.3\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2main.lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;glm.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -63,28 +68,37 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>Utilites/SDL2/include;Utilites/glew-2.1.0/include;Utilites/glm/glm;Utilites/SDL2_image-2.0.3/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>Utilites\SDL2\lib\x86\;Utilites\glew-2.1.0\lib\Release\Win32\;Utilites\glm\lib\;Utilites\SDL2_image-2.0.3\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2main.lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;glm.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ME_Camera.cpp" />
     <ClCompile Include="ME_Console.cpp" />
     <ClCompile Include="ME_Initialize.cpp" />
     <ClCompile Include="ME_Input.cpp" />
     <ClCompile Include="ME_Main.cpp" />
     <ClCompile Include="ME_pCube.cpp" />
     <ClCompile Include="ME_Shaders.cpp" />
+    <ClCompile Include="ME_Textures.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ME_Camera.h" />
     <ClInclude Include="ME_Console.h" />
     <ClInclude Include="ME_Initialize.h" />
     <ClInclude Include="ME_Input.h" />
     <ClInclude Include="ME_Main.h" />
     <ClInclude Include="ME_pCube.h" />
     <ClInclude Include="ME_Shaders.h" />
+    <ClInclude Include="ME_Textures.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

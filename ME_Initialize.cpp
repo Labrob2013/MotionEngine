@@ -2,26 +2,30 @@
 #include "ME_Console.h"
 #include "ME_Input.h"
 #include "ME_pCube.h"
+#include "ME_Camera.h"
 
 // -------------------------------------------- //
 // -------- // Инициализация движка // -------- //
 // -------------------------------------------- //
+
+//- Создаем объект для работы с клавиатурой и мышью
+ME::Input m_input;
 
 void ME::Initialize::InitEngine() {
 
 	//- Включаем чтобы потом выключать если ошибки
 	Loaded_SDL = true, Loaded_Window = true, Loaded_GLEW = true;
 
-	PRINT_LOG("- - - - - - - - - - - - - - -");
-	PRINT_LOG("- - - - Motion Engine - - - -");
-	PRINT_LOG("- - - - - - - - - - - - - - -");
+	PRINT_LOG(" # - - - - - - - - - - - - - - - - - - - - - - - # ");
+	PRINT_LOG(" # - - - - - - - - Motion Engine - - - - - - - - # ");
+	PRINT_LOG(" # - - - - - - - - - - - - - - - - - - - - - - - # ");
 	PRINT_LOG("");
-	PRINT_LOG("[Info] Initialization Motion Engine");
+	PRINT_LOG(GetTime() << "[Info] Initialization Motion Engine");
 
 	//- Инициализация SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		std::cout << "SDL initialization error: " << SDL_GetError() << std::endl;
+		PRINT_LOG(GetTime() << "[ERROR] SDL initialization error: " << SDL_GetError());
 		SDL_Quit();
 
 		Loaded_SDL = false;
@@ -29,7 +33,7 @@ void ME::Initialize::InitEngine() {
 		exit(-1);
 	}
 	if (Loaded_SDL)
-		PRINT_LOG("[Info] SDL was successfully launched");
+		PRINT_LOG(GetTime() << "[Info] SDL was successfully launched");
 
 
 	//- Назначаем версию OpenGL
@@ -46,7 +50,7 @@ void ME::Initialize::InitEngine() {
 
 	if (window == 0)
 	{
-		PRINT_LOG("[Error] Error creating window");
+		PRINT_LOG(GetTime() << "[Error] Error creating window");
 		SDL_Quit();
 
 		Loaded_Window = false;
@@ -54,7 +58,7 @@ void ME::Initialize::InitEngine() {
 		exit(-1);
 	}
 	if (Loaded_Window)
-		PRINT_LOG("[Info] Window successfully created");
+		PRINT_LOG(GetTime() << "[Info] Window successfully created");
 
 	//- Создание контекста OpenGL
 	contexteOpenGL = SDL_GL_CreateContext(window);
@@ -73,7 +77,7 @@ void ME::Initialize::InitEngine() {
 	//- Если инициализация завершилась с ошибкой:
 	if (initialisationGLEW != GLEW_OK)
 	{
-		PRINT_LOG("[Error] GLEW initialization error:");
+		PRINT_LOG(GetTime() << "[Error] GLEW initialization error");
 		//- Закрываем
 		SDL_GL_DeleteContext(contexteOpenGL);
 		SDL_DestroyWindow(window);
@@ -84,32 +88,18 @@ void ME::Initialize::InitEngine() {
 		exit(-1);
 	}
 	if (Loaded_GLEW)
-		PRINT_LOG("[Info] GLEW was successfully launched");
+		PRINT_LOG(GetTime() << "[Info] GLEW was successfully launched");
 	
 	//- Включаем Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
-	//- Создаем объект для работы с клавиатурой и мышью
-	ME::Input m_input;
-
-	PRINT_LOG("[Info] Successfully started input devices");
+	PRINT_LOG(GetTime() << "[Info] Successfully started input devices");
 
 	//- Основной цикл
-	while (!m_input.end())
-	{
-		//- Управление событиями
-		m_input.updateEvenements();
+	ME::Initialize::UpdateWindow();
 
-		if (m_input.getTouche(SDL_SCANCODE_ESCAPE))
-			break;
-
-		//- Обновление Окна
-		ME::Initialize::UpdateWindow();
-
-		SDL_GL_SwapWindow(window);
-	}
 	if (m_input.end())
-		PRINT_LOG("[Info] Successfully completed the Motion Engine");
+		PRINT_LOG(GetTime() << "[Info] Successfully completed the Motion Engine");
 
 	//- Закрытие
 	SDL_GL_DeleteContext(contexteOpenGL);
@@ -126,43 +116,126 @@ void ME::Initialize::InitEngine() {
 
 void ME::Initialize::UpdateWindow()
 {
-	ME::pCube pCubeTest(2.0, "shaders/couleur3D.vme", "Shaders/couleur3D.fme");
+	//- Создание объект
+	ME::pCube pCube01(2, 4, 1, "shaders/textured.vme", "shaders/textured.fme", "Textures/01.jpg");
+	ME::pCube pCube02(2, 4, 1, "shaders/textured.vme", "shaders/textured.fme", "Textures/02.jpg");
 
-	//- Матрицы проецирования и моделирования
-	mat4 projection;
-	mat4 modelview;
+	ME::pCube pCube03(5, 0.01, 5, "shaders/textured.vme", "shaders/textured.fme", "Textures/03.jpg");
+	ME::pCube pCube04(5, 0.01, 5, "shaders/textured.vme", "shaders/textured.fme", "Textures/03.jpg");
+	ME::pCube pCube05(5, 0.01, 5, "shaders/textured.vme", "shaders/textured.fme", "Textures/03.jpg");
 
-	projection = perspective(70.0, (double)w_width / w_height, 1.0, 100.0);
+	ME::Camera Camera(vec3(3, 3, 3), vec3(0, 0, 0), vec3(0, 1, 0), 0.5, 0.01);
 
-	//- Очишаем
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//- Обновление окна
+	while (!m_input.end())
+	{
+		//- Управление событиями
+		m_input.updateEvenements();
 
-	modelview = mat4(1.0);
-	modelview = lookAt(vec3(3, 3, 3), vec3(0, 0, 0), vec3(0, 1, 0));
+		if (m_input.getTouche(SDL_SCANCODE_ESCAPE))
+			break;
 
-	//- Сохраняем
-	mat4 save_Modelview = modelview;
+		//- Матрицы проецирования и моделирования
+		mat4 projection;
+		mat4 modelview;
 
-// -------------------------------------- //
-// -------- // Создаем объекты // ------- //
-// -------------------------------------- //
+		projection = perspective(70.0, (double)w_width / w_height, 1.0, 100.0);
 
-	//- Показывая первый куб (в центре маркера)
-	pCubeTest.Display(projection, modelview);
+		//- Очишаем
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//- Отображение второго куба
-	modelview = translate(modelview, vec3(3, 0, 0));
-	pCubeTest.Display(projection, modelview);
+		modelview = mat4(1.0);
+		Camera.move(m_input);
+		Camera.lookAt(modelview);
 
+		//- Сохраняем
+		mat4 save_Modelview = modelview;
 
-	//- Отображение третьего куба
-	modelview = translate(modelview, vec3(3, 0, 0));
-	pCubeTest.Display(projection, modelview);
+	// -------------------------------------- //
+	// -------- // Создаем объекты // ------- //
+	// -------------------------------------- //
 
-//
+		//## 1
+			save_Modelview = modelview;
 
-	//- Возвращаем вид
-	modelview = save_Modelview;
+			//- Позиция объекта
+			modelview = translate(modelview, vec3(0, 0, 0));
+
+			//- Отображение объекта
+			pCube01.Display(pCube01.Textured, projection, modelview);
+
+			//- Вращение объекта
+			modelview = rotate(modelview, 0.0f, vec3(0.0f, 0.0f, 1.0f));
+
+			modelview = save_Modelview;
+		//
+		
+		//## 2
+			save_Modelview = modelview;
+
+			//- Позиция объекта
+			modelview = translate(modelview, vec3(0, 0, 8));
+
+			//- Отображение объекта
+			pCube02.Display(pCube02.Textured, projection, modelview);
+
+			//- Вращение объекта
+			modelview = rotate(modelview, 0.0f, vec3(0.0f, 0.0f, 1.0f));
+
+			modelview = save_Modelview;
+		//
+
+		//## 3
+			save_Modelview = modelview;
+
+			//- Позиция объекта
+			modelview = translate(modelview, vec3(0, -2, 0));
+
+			//- Отображение объекта
+			pCube03.Display(pCube03.Textured, projection, modelview);
+
+			//- Вращение объекта
+			modelview = rotate(modelview, 0.0f, vec3(0.0f, 0.0f, 1.0f));
+
+			modelview = save_Modelview;
+		//
+
+		//## 4
+			save_Modelview = modelview;
+
+			//- Позиция объекта
+			modelview = translate(modelview, vec3(0, -2, 5));
+
+			//- Отображение объекта
+			pCube04.Display(pCube04.Textured, projection, modelview);
+
+			//- Вращение объекта
+			modelview = rotate(modelview, 0.0f, vec3(0.0f, 0.0f, 1.0f));
+
+			modelview = save_Modelview;
+		//
+
+		//## 5
+			save_Modelview = modelview;
+
+			//- Позиция объекта
+			modelview = translate(modelview, vec3(5, -2, 0));
+
+			//- Отображение объекта
+			pCube05.Display(pCube05.Textured, projection, modelview);
+
+			//- Вращение объекта
+			modelview = rotate(modelview, 0.0f, vec3(0.0f, 0.0f, 1.0f));
+
+			modelview = save_Modelview;
+		//
+
+	//
+
+		//- Возвращаем вид
+		modelview = save_Modelview;
+		SDL_GL_SwapWindow(window);
+	}
 }
 
 // -------------------------------------- //
@@ -174,4 +247,20 @@ void ME::Initialize::SaveLog()
 	ME::Console::SaveInFile("Console.log");
 }
 
-// -------------------------------------- //
+// ---------------------------------------- //
+// -------- // Получение времени // ------- //
+// ---------------------------------------- //
+
+string ME::Initialize::GetTime()
+{
+	//- Пример вывода: [15:50:02]
+	time(&t);
+	t_now = localtime(&t);
+
+	stringstream stream;
+	stream << "# " << t_now->tm_hour << ":" << t_now->tm_min << ":" << t_now->tm_sec << " | ";
+	
+	return stream.str();
+}
+
+// ---------------------------------------- //

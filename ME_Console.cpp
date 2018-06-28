@@ -11,7 +11,6 @@ stringstream ME::Console::Log = stringstream();
 void ME::Console::SaveInFile(const string &filename)
 {
 	ofstream File(filename);
-
 	if (!File.is_open())
 		return;
 

@@ -2,6 +2,9 @@
 // ---------- // Инициализация всех компонентов // ---------- //
 // ---------------------------------------------------------- //
 
+#ifndef ME_INITIALIZE
+#define ME_INITIALIZE
+
 #include "ME_Main.h"
 
 namespace ME
@@ -18,6 +21,8 @@ namespace ME
 		//- Сохранение лога
 		void SaveLog();
 
+		//- Вывод времени
+		string GetTime();
 
 		//- SDL
 		int w_width, w_height;
@@ -36,7 +41,13 @@ namespace ME
 
 			//- Отображение проекции и предметов
 			mat4 projection, modelview;
+
+		//- Время
+			time_t t;
+			tm* t_now;
 	};
 }
+
+#endif //- ME_INITIALIZE
 
 // ---------------------------------------------------------- //

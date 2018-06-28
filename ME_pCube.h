@@ -2,24 +2,39 @@
 // ---------- // Примитив: Куб // ---------- //
 // ----------------------------------------- //
 
+#ifndef ME_PCUBE
+#define ME_PCUBE
+
 #include "ME_Main.h"
 #include "ME_Shaders.h"
+#include "ME_Textures.h"
 
-namespace ME
-{
+namespace ME {
 	class pCube
 	{
 	public:
-		pCube(float taille, string const vertexShader, string const fragmentShader);
+
+		//- Тип куба (Без текстуры, с текстурой)
+		enum Type  { None, Textured };
+
+		//- Инициализация и загрузка текстуры
+		pCube(float cX, float cY, float cZ,
+			string const vertexShader, string const fragmentShader, string const texture);
+
 		~pCube();
 
-		void Display(mat4 &projection, mat4 &modelview);
+		//- Отображение
+		void Display(Type type, mat4 &projection, mat4 &modelview);
 
-
-	private:
+	protected:
 		ME::Shaders m_shader;
 		float m_vertices[108], m_colors[108];
+
+		ME::Textures m_texture;
+		float m_coordTexture[72];
 	};
 }
+
+#endif //- ME_PCUBE
 
 // ----------------------------------------- //
