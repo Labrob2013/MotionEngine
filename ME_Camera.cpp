@@ -5,9 +5,9 @@ ME::Camera::Camera() : m_phi(0.0), m_theta(0.0), m_orientation(), m_axeVertical(
 
 }
 
-ME::Camera::Camera(vec3 position, vec3 targetPoint, vec3 axeVertical, float sensitivity, float speed) : m_phi(0.0), m_theta(0.0), m_orientation(),m_axeVertical(axeVertical), m_deplacementLateral(),m_position(position), m_targetPoint(targetPoint),m_sensitivity(sensitivity), m_speed(speed)
+ME::Camera::Camera(vec3 position, vec3 targetPoint, vec3 axeVertical, float sensitivity, float speed) : m_phi(0.0), m_theta(0.0), m_orientation(), m_axeVertical(axeVertical), m_deplacementLateral(), m_position(position), m_targetPoint(targetPoint), m_sensitivity(sensitivity), m_speed(speed)
 {
-	//- Обновление целевой точки
+	//- РћР±РЅРѕРІР»РµРЅРёРµ С†РµР»РµРІРѕР№ С‚РѕС‡РєРё
 	setTargetPoint(targetPoint);
 }
 
@@ -20,12 +20,12 @@ ME::Camera::~Camera()
 
 void ME::Camera::direct(int xRel, int yRel)
 {
-	//- Восстановление углов
+	//- Р’РѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ СѓРіР»РѕРІ
 	m_phi += -yRel * m_sensitivity;
 	m_theta += -xRel * m_sensitivity;
 
 
-	//- Ограничение угла phi
+	//- РћРіСЂР°РЅРёС‡РµРЅРёРµ СѓРіР»Р° phi
 	if (m_phi > 89.0)
 		m_phi = 89.0;
 
@@ -33,59 +33,59 @@ void ME::Camera::direct(int xRel, int yRel)
 		m_phi = -89.0;
 
 
-	//- Преобразование углов в радиан
+	//- РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СѓРіР»РѕРІ РІ СЂР°РґРёР°РЅ
 	float phiRadian = m_phi * M_PI / 180;
 	float thetaRadian = m_theta * M_PI / 180;
 
 
-	//- Если вертикальная ось является осью X
+	//- Р•СЃР»Рё РІРµСЂС‚РёРєР°Р»СЊРЅР°СЏ РѕСЃСЊ СЏРІР»СЏРµС‚СЃСЏ РѕСЃСЊСЋ X
 	if (m_axeVertical.x == 1.0)
 	{
-		//- Расчет сферических координат
+		//- Р Р°СЃС‡РµС‚ СЃС„РµСЂРёС‡РµСЃРєРёС… РєРѕРѕСЂРґРёРЅР°С‚
 		m_orientation.x = sin(phiRadian);
 		m_orientation.y = cos(phiRadian) * cos(thetaRadian);
 		m_orientation.z = cos(phiRadian) * sin(thetaRadian);
 	}
 
 
-	//- Если это ось Y
+	//- Р•СЃР»Рё СЌС‚Рѕ РѕСЃСЊ Y
 	else if (m_axeVertical.y == 1.0)
 	{
-		//- Расчет сферических координат
+		//- Р Р°СЃС‡РµС‚ СЃС„РµСЂРёС‡РµСЃРєРёС… РєРѕРѕСЂРґРёРЅР°С‚
 		m_orientation.x = cos(phiRadian) * sin(thetaRadian);
 		m_orientation.y = sin(phiRadian);
 		m_orientation.z = cos(phiRadian) * cos(thetaRadian);
 	}
 
 
-	//- В противном случае это ось Z
+	//- Р’ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ СЌС‚Рѕ РѕСЃСЊ Z
 	else
 	{
-		//- Расчет сферических координат
+		//- Р Р°СЃС‡РµС‚ СЃС„РµСЂРёС‡РµСЃРєРёС… РєРѕРѕСЂРґРёРЅР°С‚
 		m_orientation.x = cos(phiRadian) * cos(thetaRadian);
 		m_orientation.y = cos(phiRadian) * sin(thetaRadian);
 		m_orientation.z = sin(phiRadian);
 	}
 
 
-	//- Расчет из нормального
+	//- Р Р°СЃС‡РµС‚ РёР· РЅРѕСЂРјР°Р»СЊРЅРѕРіРѕ
 	m_deplacementLateral = cross(m_axeVertical, m_orientation);
 	m_deplacementLateral = normalize(m_deplacementLateral);
 
 
-	//- Расчет целевой точки для OpenGL
+	//- Р Р°СЃС‡РµС‚ С†РµР»РµРІРѕР№ С‚РѕС‡РєРё РґР»СЏ OpenGL
 	m_targetPoint = m_position + m_orientation;
 }
 
 
 void ME::Camera::move(Input const &input)
 {
-	//- Управление ориентацией
+	//- РЈРїСЂР°РІР»РµРЅРёРµ РѕСЂРёРµРЅС‚Р°С†РёРµР№
 	if (input.mousemovement())
 		direct(input.getXRel(), input.getYRel());
 
 
-	//- Расширенная камера
+	//- Р Р°СЃС€РёСЂРµРЅРЅР°СЏ РєР°РјРµСЂР°
 	if (input.getTouche(SDL_SCANCODE_UP))
 	{
 		m_position = m_position + m_orientation * m_speed;
@@ -93,7 +93,7 @@ void ME::Camera::move(Input const &input)
 	}
 
 
-	//- Задняя панель камеры
+	//- Р—Р°РґРЅСЏСЏ РїР°РЅРµР»СЊ РєР°РјРµСЂС‹
 	if (input.getTouche(SDL_SCANCODE_DOWN))
 	{
 		m_position = m_position - m_orientation * m_speed;
@@ -101,7 +101,7 @@ void ME::Camera::move(Input const &input)
 	}
 
 
-	//- Переместить влево
+	//- РџРµСЂРµРјРµСЃС‚РёС‚СЊ РІР»РµРІРѕ
 	if (input.getTouche(SDL_SCANCODE_LEFT))
 	{
 		m_position = m_position + m_deplacementLateral * m_speed;
@@ -109,7 +109,7 @@ void ME::Camera::move(Input const &input)
 	}
 
 
-	//- Переместить вправо
+	//- РџРµСЂРµРјРµСЃС‚РёС‚СЊ РІРїСЂР°РІРѕ
 	if (input.getTouche(SDL_SCANCODE_RIGHT))
 	{
 		m_position = m_position - m_deplacementLateral * m_speed;
@@ -120,22 +120,22 @@ void ME::Camera::move(Input const &input)
 
 void ME::Camera::lookAt(mat4 &modelview)
 {
-	//- Обновление представления в матрице
+	//- РћР±РЅРѕРІР»РµРЅРёРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РІ РјР°С‚СЂРёС†Рµ
 	modelview = glm::lookAt(m_position, m_targetPoint, m_axeVertical);
 }
 
 
 void ME::Camera::setTargetPoint(vec3 targetPoint)
 {
-	//- Вычисление вектора ориентации
+	//- Р’С‹С‡РёСЃР»РµРЅРёРµ РІРµРєС‚РѕСЂР° РѕСЂРёРµРЅС‚Р°С†РёРё
 	m_orientation = m_targetPoint - m_position;
 	m_orientation = normalize(m_orientation);
 
 
-	//- Если вертикальная ось является осью X
+	//- Р•СЃР»Рё РІРµСЂС‚РёРєР°Р»СЊРЅР°СЏ РѕСЃСЊ СЏРІР»СЏРµС‚СЃСЏ РѕСЃСЊСЋ X
 	if (m_axeVertical.x == 1.0)
 	{
-		//- Расчет углов
+		//- Р Р°СЃС‡РµС‚ СѓРіР»РѕРІ
 		m_phi = asin(m_orientation.x);
 		m_theta = acos(m_orientation.y / cos(m_phi));
 
@@ -144,10 +144,10 @@ void ME::Camera::setTargetPoint(vec3 targetPoint)
 	}
 
 
-	//- Если это ось Y
+	//- Р•СЃР»Рё СЌС‚Рѕ РѕСЃСЊ Y
 	else if (m_axeVertical.y == 1.0)
 	{
-		//- Расчет углов
+		//- Р Р°СЃС‡РµС‚ СѓРіР»РѕРІ
 		m_phi = asin(m_orientation.y);
 		m_theta = acos(m_orientation.z / cos(m_phi));
 
@@ -156,10 +156,10 @@ void ME::Camera::setTargetPoint(vec3 targetPoint)
 	}
 
 
-	//- В противном случае это ось Z
+	//- Р’ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ СЌС‚Рѕ РѕСЃСЊ Z
 	else
 	{
-		//- Расчет углов
+		//- Р Р°СЃС‡РµС‚ СѓРіР»РѕРІ
 		m_phi = asin(m_orientation.x);
 		m_theta = acos(m_orientation.z / cos(m_phi));
 
@@ -168,7 +168,7 @@ void ME::Camera::setTargetPoint(vec3 targetPoint)
 	}
 
 
-	//- Преобразование в градусы
+	//- РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ РІ РіСЂР°РґСѓСЃС‹
 	m_phi = m_phi * 180 / M_PI;
 	m_theta = m_theta * 180 / M_PI;
 }
@@ -176,11 +176,11 @@ void ME::Camera::setTargetPoint(vec3 targetPoint)
 
 void ME::Camera::setPosition(vec3 position)
 {
-	//- Обновить позицию
+	//- РћР±РЅРѕРІРёС‚СЊ РїРѕР·РёС†РёСЋ
 	m_position = position;
 
 
-	//- Обновление целевой точки
+	//- РћР±РЅРѕРІР»РµРЅРёРµ С†РµР»РµРІРѕР№ С‚РѕС‡РєРё
 	m_targetPoint = m_position + m_orientation;
 }
 

@@ -23,6 +23,12 @@ namespace ME {
 
 		~pCube();
 
+		//- VBO - Загрузка
+		void load();
+
+		//- VBO - Обновление
+		void ME::pCube::loadUpdate(void *donnees, int tailleBytes, int decalage);
+
 		//- Отображение
 		void Display(Type type, mat4 &projection, mat4 &modelview);
 
@@ -32,6 +38,15 @@ namespace ME {
 
 		ME::Textures m_texture;
 		float m_coordTexture[72];
+
+		//- VBO
+		GLuint m_vboID;
+		int m_SizeVerticesBytes;
+		int m_SizeColorsBytes;
+		int m_SizeCoordTextureBytes;
+
+		//- VAO
+		GLuint m_vaoID;
 	};
 }
 
