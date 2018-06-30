@@ -3,6 +3,7 @@
 #include "ME_Input.h"
 #include "ME_pCube.h"
 #include "ME_Camera.h"
+#include "ME_Config.h"
 
 // -------------------------------------------- //
 // -------- // Инициализация движка // -------- //
@@ -56,8 +57,19 @@ void ME::Initialize::InitEngine() {
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
+	ME::Config Config;
+	w_title = Config.getConfig_str("Config.json", "Game_title").c_str();
+
+	w_width = Config.getConfig_int("Config.json", "Window_width");
+	w_height = Config.getConfig_int("Config.json", "Window_height");
+
+	if (!GetFileExist("Config.json"))
+	{
+		SaveLog(); exit(-1);
+	}
+
 	//- Создание окна
-	window = SDL_CreateWindow("Тестирование двигателя Motion Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w_width, w_height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow(w_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w_width, w_height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	/* Create a Render */
 	render = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);

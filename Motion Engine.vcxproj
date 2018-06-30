@@ -51,7 +51,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>Utilites/SDL2/include;Utilites/glew-2.1.0/include;Utilites/glm/glm;Utilites/SDL2_image-2.0.3/include;Utilites/SDL2_ttf-2.0.14/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Utilites/SDL2/include;Utilites/glew-2.1.0/include;Utilites/glm/glm;Utilites/SDL2_image-2.0.3/include;Utilites/SDL2_ttf-2.0.14/include;Utilites/JSON/rapidjson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -68,7 +68,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>Utilites/SDL2/include;Utilites/glew-2.1.0/include;Utilites/glm/glm;Utilites/SDL2_image-2.0.3/include;Utilites/SDL2_ttf-2.0.14/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Utilites/SDL2/include;Utilites/glew-2.1.0/include;Utilites/glm/glm;Utilites/SDL2_image-2.0.3/include;Utilites/SDL2_ttf-2.0.14/include;Utilites/JSON/rapidjson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
@@ -83,6 +83,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ME_Camera.cpp" />
+    <ClCompile Include="ME_Config.cpp" />
     <ClCompile Include="ME_Console.cpp" />
     <ClCompile Include="ME_Initialize.cpp" />
     <ClCompile Include="ME_Input.cpp" />
@@ -93,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ME_Camera.h" />
+    <ClInclude Include="ME_Config.h" />
     <ClInclude Include="ME_Console.h" />
     <ClInclude Include="ME_Initialize.h" />
     <ClInclude Include="ME_Input.h" />

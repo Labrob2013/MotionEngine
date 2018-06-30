@@ -34,7 +34,6 @@ namespace ME
 		bool GetFileExist(const string& filename);
 
 		//- SDL
-		int w_width, w_height;
 		SDL_Window* window;
 		SDL_Renderer *render;
 		SDL_Surface *gui_fps = NULL, *gui_texture = NULL;
@@ -44,6 +43,11 @@ namespace ME
 		unsigned int FPS_frames = 0;
 		double FPS_frameRate = 60, FPS_averageFrameTimeMS = 33.333;
 		char FPS[20];
+
+
+		//- Окно
+		int w_width, w_height;
+		string w_title = "";
 
 	private:
 		//- Для проверки загружены ли?

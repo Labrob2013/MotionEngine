@@ -5,7 +5,7 @@
 
 ME::Textures::Textures(Textures const &textureCopy)
 {
-	//- Копируем текстуры
+	//- РљРѕРїРёСЂСѓРµРј С‚РµРєСЃС‚СѓСЂС‹
 	m_FileImage = textureCopy.m_FileImage;
 	charger();
 }
@@ -19,15 +19,15 @@ ME::Textures::Textures(string imagefile) : m_id(0), m_FileImage(imagefile)
 
 ME::Textures::~Textures()
 {
-	//- Удаление текстуры
+	//- РЈРґР°Р»РµРЅРёРµ С‚РµРєСЃС‚СѓСЂС‹
 	glDeleteTextures(1, &m_id);
 }
 
 
-//- Методы
+//- РњРµС‚РѕРґС‹
 ME::Textures& ME::Textures::operator=(Textures const &textureCopy)
 {
-	//- Копия текстуры
+	//- РљРѕРїРёСЏ С‚РµРєСЃС‚СѓСЂС‹
 	m_FileImage = textureCopy.m_FileImage;
 	charger();
 
@@ -37,7 +37,7 @@ ME::Textures& ME::Textures::operator=(Textures const &textureCopy)
 
 bool ME::Textures::charger()
 {
-	//- Загрузка изображения на поверхность SDL
+	//- Р—Р°РіСЂСѓР·РєР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РЅР° РїРѕРІРµСЂС…РЅРѕСЃС‚СЊ SDL
 	SDL_Surface *imageSDL = IMG_Load(m_FileImage.c_str());
 
 	if (imageSDL == 0)
@@ -48,35 +48,35 @@ bool ME::Textures::charger()
 	}
 
 
-	//- Обращение изображения
+	//- РћР±СЂР°С‰РµРЅРёРµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
 	SDL_Surface *imageInversee = inverserPixels(imageSDL);
 	SDL_FreeSurface(imageSDL);
 
 
-	//- Уничтожение любой старой текстуры
+	//- РЈРЅРёС‡С‚РѕР¶РµРЅРёРµ Р»СЋР±РѕР№ СЃС‚Р°СЂРѕР№ С‚РµРєСЃС‚СѓСЂС‹
 	if (glIsTexture(m_id) == GL_TRUE)
 		glDeleteTextures(1, &m_id);
 
 
-	//- Генерация идентификатора
+	//- Р“РµРЅРµСЂР°С†РёСЏ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР°
 	glGenTextures(1, &m_id);
 
 
-	//- Фиксируем текстуру
+	//- Р¤РёРєСЃРёСЂСѓРµРј С‚РµРєСЃС‚СѓСЂСѓ
 	glBindTexture(GL_TEXTURE_2D, m_id);
 
 
-	//- Формат изображения
+	//- Р¤РѕСЂРјР°С‚ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
 	GLenum formatInterne(0), format(0);
 
 
-	//- Определение формата и внутреннего формата для трехкомпонентных изображений
+	//- РћРїСЂРµРґРµР»РµРЅРёРµ С„РѕСЂРјР°С‚Р° Рё РІРЅСѓС‚СЂРµРЅРЅРµРіРѕ С„РѕСЂРјР°С‚Р° РґР»СЏ С‚СЂРµС…РєРѕРјРїРѕРЅРµРЅС‚РЅС‹С… РёР·РѕР±СЂР°Р¶РµРЅРёР№
 	if (imageInversee->format->BytesPerPixel == 3)
 	{
-		//- Внутренний формат
+		//- Р’РЅСѓС‚СЂРµРЅРЅРёР№ С„РѕСЂРјР°С‚
 		formatInterne = GL_RGB;
 
-		//- Формат
+		//- Р¤РѕСЂРјР°С‚
 		if (imageInversee->format->Rmask == 0xff)
 			format = GL_RGB;
 		else 
@@ -84,13 +84,13 @@ bool ME::Textures::charger()
 	}
 
 
-	//- Определение формата и внутреннего формата для 4-компонентных изображений
+	//- РћРїСЂРµРґРµР»РµРЅРёРµ С„РѕСЂРјР°С‚Р° Рё РІРЅСѓС‚СЂРµРЅРЅРµРіРѕ С„РѕСЂРјР°С‚Р° РґР»СЏ 4-РєРѕРјРїРѕРЅРµРЅС‚РЅС‹С… РёР·РѕР±СЂР°Р¶РµРЅРёР№
 	else if (imageInversee->format->BytesPerPixel == 4)
 	{
-		//- Внутренний формат
+		//- Р’РЅСѓС‚СЂРµРЅРЅРёР№ С„РѕСЂРјР°С‚
 		formatInterne = GL_RGBA;
 
-		//- Формат
+		//- Р¤РѕСЂРјР°С‚
 		if (imageInversee->format->Rmask == 0xff)
 			format = GL_RGBA;
 		else
@@ -98,7 +98,7 @@ bool ME::Textures::charger()
 	}
 
 
-	//- В других случаях мы останавливаем загрузку
+	//- Р’ РґСЂСѓРіРёС… СЃР»СѓС‡Р°СЏС… РјС‹ РѕСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р·Р°РіСЂСѓР·РєСѓ
 	else
 	{
 		std::cout << "Erreur, format interne de l'image inconnu" << std::endl;
@@ -108,16 +108,16 @@ bool ME::Textures::charger()
 	}
 
 
-	//- Копируем пиксели
+	//- РљРѕРїРёСЂСѓРµРј РїРёРєСЃРµР»Рё
 	glTexImage2D(GL_TEXTURE_2D, 0, formatInterne, imageInversee->w, imageInversee->h, 0, format, GL_UNSIGNED_BYTE, imageInversee->pixels);
 
 
-	//- Применение фильтров
+	//- РџСЂРёРјРµРЅРµРЅРёРµ С„РёР»СЊС‚СЂРѕРІ
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 
-	//- Фиксируем текстуру
+	//- Р¤РёРєСЃРёСЂСѓРµРј С‚РµРєСЃС‚СѓСЂСѓ
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	SDL_FreeSurface(imageInversee);
@@ -127,24 +127,24 @@ bool ME::Textures::charger()
 
 SDL_Surface* ME::Textures::inverserPixels(SDL_Surface *imageSource) const
 {
-	//- Истинная копия исходного изображения без пикселей
+	//- РСЃС‚РёРЅРЅР°СЏ РєРѕРїРёСЏ РёСЃС…РѕРґРЅРѕРіРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ Р±РµР· РїРёРєСЃРµР»РµР№
 	SDL_Surface *imageInversee = SDL_CreateRGBSurface(0, imageSource->w, imageSource->h, imageSource->format->BitsPerPixel, imageSource->format->Rmask,
 		imageSource->format->Gmask, imageSource->format->Bmask, imageSource->format->Amask);
 
 
-	//- Промежуточная таблица для управления пикселями
+	//- РџСЂРѕРјРµР¶СѓС‚РѕС‡РЅР°СЏ С‚Р°Р±Р»РёС†Р° РґР»СЏ СѓРїСЂР°РІР»РµРЅРёСЏ РїРёРєСЃРµР»СЏРјРё
 	unsigned char* pixelsSources = (unsigned char*)imageSource->pixels;
 	unsigned char* pixelsInverses = (unsigned char*)imageInversee->pixels;
 
 
-	//- Переключение пикселей
+	//- РџРµСЂРµРєР»СЋС‡РµРЅРёРµ РїРёРєСЃРµР»РµР№
 	for (int i = 0; i < imageSource->h; i++)
 	{
 		for (int j = 0; j < imageSource->w * imageSource->format->BytesPerPixel; j++)
 			pixelsInverses[(imageSource->w * imageSource->format->BytesPerPixel * (imageSource->h - 1 - i)) + j] = pixelsSources[(imageSource->w * imageSource->format->BytesPerPixel * i) + j];
 	}
 
-	//- Возврат перевернутого изображения
+	//- Р’РѕР·РІСЂР°С‚ РїРµСЂРµРІРµСЂРЅСѓС‚РѕРіРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
 	return imageInversee;
 }
 
